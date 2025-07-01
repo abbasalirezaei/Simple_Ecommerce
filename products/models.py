@@ -2,32 +2,58 @@ from django.db import models
 from django.urls import reverse
 
 # Category Model
-class Category(models.Model):
-    title = models.CharField(max_length=300)
-    primaryCategory = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.title
+
+class Category(models.Model):
+    name = models.CharField(max_length=300)
+    slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:
-        verbose_name_plural = "Categories"
+        ordering = ['name']
+        indexes = [
+            models.Index(fields=['name']),
+        ]
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
 
-#Product Model
-class  Product(models.Model):
-    mainimage = models.ImageField(upload_to='products/', blank=True)
+    def __str__(self):
+        return self.name
+# Product Model
+
+
+class Product(models.Model):
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name="products"
+    )
     name = models.CharField(max_length=300)
-    slug = models.SlugField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    preview_text = models.TextField(max_length=200, verbose_name='Preview Text')
-    detail_text = models.TextField(max_length=1000, verbose_name='Detail Text')
-    price = models.FloatField()
-    
+    slug = models.SlugField(max_length=300)
+    main_image = models.ImageField(
+        upload_to='products/%Y/%m/%d',
+        blank=True
+    )
+    description = models.TextField(blank=True)
+    available = models.BooleanField(default=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+        indexes = [
+            models.Index(fields=['name']),
+            models.Index(fields=['id', 'slug']),
+            models.Index(fields=['-created']),
+        ]
+        verbose_name = 'product'
+        verbose_name_plural = 'products'
 
     def get_absolute_url(self):
-        return reverse("mainapp:product", kwargs={
+        return reverse("products:product-detail", kwargs={
+            'id':self.pk,
             'slug': self.slug
         })

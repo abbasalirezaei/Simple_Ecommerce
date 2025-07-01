@@ -1,0 +1,63 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="my-5">
+        <h2 class='text-center'>Your Cart</h2>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Remove</th>
+                <th>Unit price</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            {% with product=item.product %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td> <img src="{{ product.main_image.url }}" width="120"></td>
+                <td>{{ product.name }}</td>
+                <td>
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                        {{ item.update_quantity_form.quantity }}
+                        {{ item.update_quantity_form.override }}
+                        <input type="submit" value="Update">
+                        {% csrf_token %}
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                        <input type="submit" value="Remove">
+                        {% csrf_token %}
+                    </form>
+                </td>
+                <td class="num">${{ item.price }}</td>
+                <td>${{ item.total_price }}</td>
+
+            </tr>
+            {% endwith %}
+            {% endfor %}
+            <tr>
+                <th scope="row"></th>
+                <td colspan="2">Total</td>
+                <td>${{ cart.get_total_price| floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td colspan="3" class="text-center">
+                    <a href="#" class="btn btn-warning mr-4">Continue Shoping</a>
+                    <a href="#" class="btn btn-success mr-4">Proceed To Checkout</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

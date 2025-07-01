@@ -1,0 +1,19 @@
+# === Core Django ===
+Django==5.0.4
+djangorestframework==3.14.0
+django-filter
+django-crispy-forms
+crispy-bootstrap4
+Pillow
+
+# === Authentication & Authorization ===
+django-allauth
+djangorestframework-simplejwt==5.3.0
+
+# === Background Tasks ===
+celery
+redis
+django-celery-beat
+
+# === Utilities ===
+setuptools

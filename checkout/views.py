@@ -1,4 +1,4 @@
-import stripe
+# import stripe
 from django.utils.crypto import get_random_string
 from django.conf import settings
 from django.contrib import messages
@@ -8,7 +8,7 @@ from . models import BillingForm, BillingAddress
 from django.views.generic.base import TemplateView
 
 
-stripe.api_key = settings.STRIPE_SECRET_KEY 
+# stripe.api_key = settings.STRIPE_SECRET_KEY 
 
 def checkout(request):
 

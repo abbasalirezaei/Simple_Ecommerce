@@ -1,0 +1,77 @@
+{% extends 'products/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container my-5">
+    <h2 class="my-5 text-center">Featured Products</h2>
+    <div class="row">
+        <div class="col-md-2">
+            <!-- <form method="get">
+            {{ filter.form| crispy }}
+            <button class="btn btn-primary" type="submit">Search</button>
+         </form> -->
+             <form method="get">
+                <label for="">
+                    Search By Name:
+                </label>
+
+                {{ filter.form.name}}
+                <br>
+                <label for="">
+                    Search By Name:
+                </label>
+
+                {{ filter.form.price}}
+
+                <button class="btn btn-primary my-2" type="submit">Search</button>
+            </form> 
+        </div>
+        <div class="col-md-7">
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-6 col-sm-12 col-lg-4">
+                    <figure class="card card-product">
+                        <div class="img-wrap">
+                            <img src="{{ product.main_image.url }}" style="width: 100%; height: 300px;">
+                        </div>
+                        <figcaption class="info-wrap">
+                            <h6 class="title text-dots"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h6>
+                            <div class="action-wrap">
+                                <a href="cart/{{ product.slug }}" class="btn btn-primary btn-sm"> Add to Cart </a>
+                                <a href="remove/{{ product.slug }}" class="btn btn-danger btn-sm"> Remove</a>
+                                <!-- <a href="cart/" class="btn btn-primary btn-sm"> View Cart </a> -->
+
+                                <div class="price-wrap h5">
+                                    <span class="price-new">${{product.price}}</span>
+                                    <del class="price-old">$1980</del>
+                                </div>
+                            </div>
+                            <!-- action-wrap -->
+                        </figcaption>
+                    </figure>
+                    <!-- card // -->
+                </div>
+                <!-- col // -->
+                {% endfor %}
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <h3>Categories</h3>
+                <ul>
+                    <li {% if not category %}class="selected" {% endif %}>
+                        <a href="{% url 'products:product-list' %}">All</a>
+                    </li>
+                    {% for c in categories %}
+                    <li {% if category.slug == c.slug %}class="selected" {% endif %}>
+                        <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
